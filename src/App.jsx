@@ -1,11 +1,11 @@
-// App.jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
+
 import Inicio from "./paginas/Inicio";
 import FormularioVolante from "./paginas/FormularioVolante";
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route
           path="/"
@@ -16,7 +16,7 @@ function App() {
           element={<FormularioVolante />}
         />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 
