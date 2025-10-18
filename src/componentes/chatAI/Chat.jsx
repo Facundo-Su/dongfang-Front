@@ -6,6 +6,8 @@ import ChatInput from "./ChatInput";
 import BotonProduct from "../producto/BotonProduct";
 
 export default function Chat() {
+  const API_URL = import.meta.env.VITE_BACKEND_URL;
+
   const [messages, setMessages] = useState(() => {
     const saved = sessionStorage.getItem("chatMessages");
     return saved ? JSON.parse(saved) : [];
@@ -31,7 +33,7 @@ export default function Chat() {
     setInput("");
 
     try {
-      const res = await fetch("http://localhost:8080/api/chat/send", {
+      const res = await fetch(`${API_URL}/api/chat/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newMessages),

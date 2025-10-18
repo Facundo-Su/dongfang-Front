@@ -9,18 +9,20 @@ export default function FormularioVolante() {
   const [tipo, setTipo] = useState("");
   const [respuesta, setRespuesta] = useState(null);
   const [error, setError] = useState(null);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setRespuesta(null);
     setError(null);
 
     try {
-      const res = await fetch("http://localhost:8080/api/precio/Volante", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cantidad, tamanio, color, tipo }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/precio/Volante`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cantidad, tamanio, color, tipo }),
+        }
+      );
       if (!res.ok) throw new Error("Error en la consulta");
       const data = await res.json();
       setRespuesta(data);
