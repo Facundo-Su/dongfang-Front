@@ -1,4 +1,4 @@
-# Stage 1: construir la app
+# Stage 1: build de Vite
 FROM node:20 AS build
 
 WORKDIR /app
@@ -9,24 +9,19 @@ COPY package*.json ./
 # Instalar dependencias
 RUN npm install
 
-# Copiar código fuente
+# Copiar el resto del código
 COPY . .
 
-# Construir los archivos estáticos
+# Compilar la app
 RUN npm run build
 
-# Stage 2: servir con nginx
+# Stage 2: servir con Nginx
 FROM nginx:alpine
 
-# Copiar archivos build a nginx
-COPY --from=build /app/build /usr/share/nginx/html
+# Copiar carpeta dist de Vite a Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copiar configuración opcional de nginx
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Exponer puerto 80
+EXPOSE 80
 
-# Exponer el puerto que Render asigna
-ENV PORT=8080
-EXPOSE $PORT
-
-# Comando por defecto
 CMD ["nginx", "-g", "daemon off;"]
