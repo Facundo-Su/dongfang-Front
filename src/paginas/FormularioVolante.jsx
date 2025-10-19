@@ -140,7 +140,7 @@ export default function FormularioVolante() {
                 onChange={(e) => setColor(e.target.value)}
               >
                 <MenuItem value="BI COLOR">BI COLOR</MenuItem>
-                <MenuItem value="FULL COLOR">FULL COLOR</MenuItem>
+                {/*<MenuItem value="FULL COLOR">FULL COLOR</MenuItem>*/}
               </Select>
             </FormControl>
 
