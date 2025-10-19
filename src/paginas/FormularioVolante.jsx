@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Box, TextField, Button, Typography, Paper } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import Sidebar from "../componentes/navbar/Sidebar";
 
 export default function FormularioVolante() {
@@ -9,6 +19,7 @@ export default function FormularioVolante() {
   const [tipo, setTipo] = useState("");
   const [respuesta, setRespuesta] = useState(null);
   const [error, setError] = useState(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setRespuesta(null);
@@ -97,24 +108,59 @@ export default function FormularioVolante() {
               onChange={(e) => setCantidad(e.target.value)}
               required
             />
-            <TextField
-              label="Tamaño"
-              value={tamanio}
-              onChange={(e) => setTamanio(e.target.value)}
+
+            {/* Selector de Tamaño */}
+            <FormControl
+              fullWidth
               required
-            />
-            <TextField
-              label="Color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
+            >
+              <InputLabel id="tamanio-label">Tamaño</InputLabel>
+              <Select
+                labelId="tamanio-label"
+                value={tamanio}
+                label="Tamaño"
+                onChange={(e) => setTamanio(e.target.value)}
+              >
+                <MenuItem value="20x28">20x28</MenuItem>
+                <MenuItem value="40x28">40x28</MenuItem>
+                <MenuItem value="40x56">40x56</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* Selector de Color */}
+            <FormControl
+              fullWidth
               required
-            />
-            <TextField
-              label="Tipo"
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
+            >
+              <InputLabel id="color-label">Color</InputLabel>
+              <Select
+                labelId="color-label"
+                value={color}
+                label="Color"
+                onChange={(e) => setColor(e.target.value)}
+              >
+                <MenuItem value="BI COLOR">BI COLOR</MenuItem>
+                <MenuItem value="FULL COLOR">FULL COLOR</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* Selector de Tipo */}
+            <FormControl
+              fullWidth
               required
-            />
+            >
+              <InputLabel id="tipo-label">Tipo</InputLabel>
+              <Select
+                labelId="tipo-label"
+                value={tipo}
+                label="Tipo"
+                onChange={(e) => setTipo(e.target.value)}
+              >
+                <MenuItem value="OBRA">OBRA</MenuItem>
+                <MenuItem value="ILUST">ILUST</MenuItem>
+              </Select>
+            </FormControl>
+
             <Button
               type="submit"
               variant="contained"
