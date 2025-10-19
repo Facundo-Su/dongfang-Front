@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { Box, Paper, Typography, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function Message({ message }) {
   const isUser = message.role === "user";
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -17,8 +19,7 @@ function Message({ message }) {
           variant="contained"
           onClick={() => {
             // Construir la URL dinámicamente
-            const url = `/productos/${message.mensaje.toLowerCase()}`;
-            window.location.href = url;
+            navigate(`/productos/${message.mensaje.toLowerCase()}`);
           }}
         >
           Click aqui para completar datos / 点击这里填写信息
