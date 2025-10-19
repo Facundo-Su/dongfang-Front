@@ -66,7 +66,7 @@ export default function Sidebar({ mobileOpen, handleDrawerToggle, isMobile }) {
           icon={Info}
           text={"Acerca de"}
           onClick={() => {
-            navigate("/otra-ruta");
+            navigate("/productos/volante");
           }}
         />
         <ListItemMenu
