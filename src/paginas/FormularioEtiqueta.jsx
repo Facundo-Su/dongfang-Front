@@ -12,10 +12,10 @@ import {
 } from "@mui/material";
 import Sidebar from "../componentes/navbar/Sidebar";
 
-export default function FormularioVolante() {
+export default function FormularioEtiqueta() {
+  const [ancho, setAncho] = useState("");
+  const [largo, setLargo] = useState("");
   const [cantidad, setCantidad] = useState("");
-  const [tamanio, setTamanio] = useState("");
-  const [color, setColor] = useState("");
   const [tipo, setTipo] = useState("");
   const [respuesta, setRespuesta] = useState(null);
   const [error, setError] = useState(null);
@@ -27,11 +27,11 @@ export default function FormularioVolante() {
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/precio/Volante`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/precio/Etiqueta`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cantidad, tamanio, color, tipo }),
+          body: JSON.stringify({ ancho, largo, cantidad, tipo }),
         }
       );
       if (!res.ok) throw new Error("Error en la consulta");
@@ -69,14 +69,13 @@ export default function FormularioVolante() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          bgcolor: "#e8ebf0",
           p: 4,
         }}
       >
         <Paper
           sx={{
             width: "100%",
-            maxWidth: "800px", // más ancho
+            maxWidth: "800px", // ahora más ancho
             p: 6,
             display: "flex",
             flexDirection: "column",
@@ -89,7 +88,7 @@ export default function FormularioVolante() {
             variant="h4"
             mb={3}
           >
-            Consulta de Volante
+            Formulario Personalizado
           </Typography>
 
           <Box
@@ -97,6 +96,22 @@ export default function FormularioVolante() {
             onSubmit={handleSubmit}
             sx={{ display: "flex", flexDirection: "column", gap: 3 }}
           >
+            <TextField
+              label="Ancho (cm)"
+              type="number"
+              value={ancho}
+              onChange={(e) => setAncho(e.target.value)}
+              required
+              fullWidth
+            />
+            <TextField
+              label="Largo (cm)"
+              type="number"
+              value={largo}
+              onChange={(e) => setLargo(e.target.value)}
+              required
+              fullWidth
+            />
             <TextField
               label="Cantidad"
               type="number"
@@ -110,39 +125,6 @@ export default function FormularioVolante() {
               fullWidth
               required
             >
-              <InputLabel id="tamanio-label">Tamaño</InputLabel>
-              <Select
-                labelId="tamanio-label"
-                value={tamanio}
-                label="Tamaño"
-                onChange={(e) => setTamanio(e.target.value)}
-              >
-                <MenuItem value="20x28">20x28</MenuItem>
-                <MenuItem value="40x28">40x28</MenuItem>
-                <MenuItem value="40x56">40x56</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl
-              fullWidth
-              required
-            >
-              <InputLabel id="color-label">Color</InputLabel>
-              <Select
-                labelId="color-label"
-                value={color}
-                label="Color"
-                onChange={(e) => setColor(e.target.value)}
-              >
-                <MenuItem value="BI COLOR">BI COLOR</MenuItem>
-                <MenuItem value="FULL COLOR">FULL COLOR</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl
-              fullWidth
-              required
-            >
               <InputLabel id="tipo-label">Tipo</InputLabel>
               <Select
                 labelId="tipo-label"
@@ -150,8 +132,11 @@ export default function FormularioVolante() {
                 label="Tipo"
                 onChange={(e) => setTipo(e.target.value)}
               >
-                <MenuItem value="OBRA">OBRA</MenuItem>
-                <MenuItem value="ILUST">ILUST</MenuItem>
+                <MenuItem value="Normal">普通贴纸</MenuItem>
+                <MenuItem value="Tamano Especial">特殊形状</MenuItem>
+                <MenuItem value="Transparente Vinilo">塑料透明</MenuItem>
+                <MenuItem value="Vinilo">塑料</MenuItem>
+                <MenuItem value="Dorado">金色（不防水）</MenuItem>
               </Select>
             </FormControl>
 

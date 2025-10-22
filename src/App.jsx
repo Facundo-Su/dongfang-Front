@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Inicio from "./paginas/Inicio";
 import FormularioVolante from "./paginas/FormularioVolante";
+import FormularioEtiqueta from "./paginas/FormularioEtiqueta";
 
 function App() {
   return (
@@ -14,6 +15,10 @@ function App() {
         <Route
           path="/productos/volante"
           element={<FormularioVolante />}
+        />
+        <Route
+          path="/productos/etiqueta"
+          element={<FormularioEtiqueta />}
         />
       </Routes>
     </Router>

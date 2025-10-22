@@ -70,9 +70,11 @@ export default function Sidebar({ mobileOpen, handleDrawerToggle, isMobile }) {
           }}
         />
         <ListItemMenu
-          icon={ContactMail}
-          text={"Contacto"}
-          onClick={() => {}}
+          icon={Info}
+          text={"Formulario Etiqueta"}
+          onClick={() => {
+            navigate("/productos/etiqueta");
+          }}
         />
       </List>
     </Box>

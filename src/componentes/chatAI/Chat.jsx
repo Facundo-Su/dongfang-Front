@@ -43,7 +43,7 @@ export default function Chat() {
       setMessages((prev) => [...prev, respuesta]);
 
       // Detectar si la AI devolvió un producto
-      const productos = ["Volante", "Tarjeta", "Folleto"];
+      const productos = ["Volante", "Tarjeta", "Folleto", "Etiqueta"];
       if (productos.includes(respuesta.mensaje)) {
         setMessages((prev) => [
           ...prev,
