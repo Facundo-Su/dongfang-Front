@@ -21,13 +21,12 @@ export default function FormularioVolante() {
   const [respuesta, setRespuesta] = useState(null);
   const [error, setError] = useState(null);
 
-  if (!enviarConsulta()) return;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setRespuesta(null);
     setError(null);
 
+    if (!enviarConsulta()) return;
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/precio/Volante`,
