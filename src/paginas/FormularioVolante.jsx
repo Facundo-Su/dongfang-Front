@@ -92,7 +92,7 @@ export default function FormularioVolante() {
             variant="h4"
             mb={3}
           >
-            Consulta de Volante
+            填写询问传单价格
           </Typography>
 
           <Box

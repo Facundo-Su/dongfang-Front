@@ -25,7 +25,7 @@ export default function FormularioEtiqueta() {
     setRespuesta(null);
     setError(null);
 
-    if (!enviarConsulta({ ancho, largo, cantidad, tipo })) return;
+    if (!enviarConsulta()) return;
 
     try {
       const res = await fetch(
@@ -90,7 +90,7 @@ export default function FormularioEtiqueta() {
             variant="h4"
             mb={3}
           >
-            Formulario Personalizado
+            填写询问贴纸价格
           </Typography>
 
           <Box
