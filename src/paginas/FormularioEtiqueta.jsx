@@ -11,6 +11,7 @@ import {
   FormControl,
 } from "@mui/material";
 import Sidebar from "../componentes/navbar/Sidebar";
+import { enviarConsulta } from "../componentes/funciones/LimitarConsulta";
 
 export default function FormularioEtiqueta() {
   const [ancho, setAncho] = useState("");
@@ -19,11 +20,12 @@ export default function FormularioEtiqueta() {
   const [tipo, setTipo] = useState("");
   const [respuesta, setRespuesta] = useState(null);
   const [error, setError] = useState(null);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setRespuesta(null);
     setError(null);
+
+    if (!enviarConsulta({ ancho, largo, cantidad, tipo })) return;
 
     try {
       const res = await fetch(

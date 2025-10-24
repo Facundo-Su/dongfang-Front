@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { Box, IconButton, useTheme, useMediaQuery } from "@mui/material";
+import { Box, IconButton, useMediaQuery, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "../componentes/navbar/Sidebar";
-import Chat from "../componentes/chatAI/Chat";
 
-export default function Inicio() {
+export default function MainLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md")); // detecta mobile
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleDrawerToggle = () => {
     setMobileOpen((prev) => !prev);
@@ -18,15 +17,15 @@ export default function Inicio() {
       sx={{
         display: "flex",
         height: "100vh",
-        bgcolor: "#f0f2f5",
         flexDirection: { xs: "column", md: "row" },
+        bgcolor: "#f0f2f5",
       }}
     >
       {/* Sidebar */}
       <Sidebar
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
-        isMobile={isMobile} // importante para que Drawer sepa si es temporal o permanente
+        isMobile={isMobile}
       />
 
       {/* Barra superior solo en mobile */}
@@ -34,8 +33,8 @@ export default function Inicio() {
         <Box
           sx={{
             width: "100%",
-            display: "flex",
             p: 1,
+            display: "flex",
             justifyContent: "flex-start",
           }}
         >
@@ -48,32 +47,19 @@ export default function Inicio() {
         </Box>
       )}
 
-      {/* Contenedor del chat */}
+      {/* Contenedor principal */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
+          justifyContent: "stretch",
           alignItems: "stretch",
           p: { xs: 1, md: 3 },
         }}
       >
-        <Box
-          sx={{
-            flexGrow: 1,
-            display: "flex",
-            flexDirection: "column",
-            borderRadius: 3,
-            border: "1px solid #ccc",
-            overflow: "hidden",
-            minWidth: 300,
-            maxWidth: "1200px",
-            bgcolor: "white",
-          }}
-        >
-          <Chat />
-        </Box>
+        {children}
       </Box>
     </Box>
   );

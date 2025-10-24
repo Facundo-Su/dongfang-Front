@@ -12,7 +12,7 @@ export default function ChatHeader({ toggleChat }) {
         mb: 1,
       }}
     >
-      <Typography variant="h6">Chat Demo</Typography>
+      <Typography variant="h6">AI 助手</Typography>
       <IconButton
         size="small"
         onClick={toggleChat}

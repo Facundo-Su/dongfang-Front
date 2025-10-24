@@ -22,7 +22,7 @@ function Message({ message }) {
             navigate(`/productos/${message.mensaje.toLowerCase()}`);
           }}
         >
-          Click aqui para completar datos / 点击这里填写信息
+          Completes los Datos/ 填写信息
         </Button>
       ) : (
         <Paper

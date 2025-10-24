@@ -11,6 +11,7 @@ import {
   FormControl,
 } from "@mui/material";
 import Sidebar from "../componentes/navbar/Sidebar";
+import { enviarConsulta } from "../componentes/funciones/LimitarConsulta";
 
 export default function FormularioVolante() {
   const [cantidad, setCantidad] = useState("");
@@ -19,6 +20,8 @@ export default function FormularioVolante() {
   const [tipo, setTipo] = useState("");
   const [respuesta, setRespuesta] = useState(null);
   const [error, setError] = useState(null);
+
+  if (!enviarConsulta()) return;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

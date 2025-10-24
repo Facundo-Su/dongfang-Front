@@ -1,103 +1,120 @@
 import React from "react";
-import {
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  Toolbar,
-  Typography,
-  Box,
-  Divider,
-  Button,
-  Icon,
-  ListItemIcon,
-} from "@mui/material";
+import { Drawer, List, Toolbar, Typography, Box, Divider } from "@mui/material";
+import { Home, Info } from "@mui/icons-material";
+import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/dongfangLogo.png";
-import { Home, Info, ContactMail } from "@mui/icons-material";
 import ListItemMenu from "../general/ListItemMenu";
-import { Navigate, useNavigate } from "react-router-dom";
 
 const drawerWidth = 260;
 
-export default function Sidebar({ mobileOpen, handleDrawerToggle, isMobile }) {
+export default function Sidebar({ mobileOpen, handleDrawerToggle }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const drawerContent = (
     <Box sx={{ textAlign: "center" }}>
+      {/* Encabezado con logo */}
       <Toolbar
         sx={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           alignItems: "center",
-          mt: 2,
-          mb: 2,
+          py: 3,
         }}
       >
-        <img
-          src={logo}
-          alt="Logo"
-          style={{
-            width: "80px",
-            height: "auto",
-            marginBottom: "8px",
-            marginRight: "30px",
+        <Box
+          sx={{
+            background: "rgba(255,255,255,0.3)",
+            borderRadius: "50%",
+            p: 1.2,
+            mb: 1,
+            boxShadow: "0 0 10px rgba(0,0,0,0.1)",
           }}
-        />
+        >
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ width: "65px", height: "auto", borderRadius: "50%" }}
+          />
+        </Box>
         <Typography
           variant="h6"
-          color="white"
           sx={{
-            color: "yellow", // color del relleno de la letra
-            fontSize: "1.5rem",
+            color: "#ffcc00",
+            fontWeight: 700,
+            letterSpacing: "1px",
           }}
         >
           东方印刷
         </Typography>
       </Toolbar>
-      <Divider />
 
-      <List sx={{ ml: "5px", mr: "5px" }}>
+      <Divider sx={{ borderColor: "rgba(255,255,255,0.2)" }} />
+
+      {/* Menú */}
+      <List sx={{ mt: 2, px: 1 }}>
         <ListItemMenu
           icon={Home}
           text="Inicio"
-          onClick={() => navigate("/")} // <-- función
+          selected={location.pathname === "/"}
+          onClick={() => navigate("/")}
         />
         <ListItemMenu
           icon={Info}
-          text={"Formulario Volante"}
-          onClick={() => {
-            navigate("/productos/volante");
-          }}
+          text="Formulario Volante"
+          selected={location.pathname === "/productos/volante"}
+          onClick={() => navigate("/productos/volante")}
         />
         <ListItemMenu
           icon={Info}
-          text={"Formulario Etiqueta"}
-          onClick={() => {
-            navigate("/productos/etiqueta");
-          }}
+          text="Formulario Etiqueta"
+          selected={location.pathname === "/productos/etiqueta"}
+          onClick={() => navigate("/productos/etiqueta")}
         />
       </List>
     </Box>
   );
 
   return (
-    <Drawer
-      variant={isMobile ? "temporary" : "permanent"}
-      open={isMobile ? mobileOpen : true}
-      onClose={handleDrawerToggle}
-      ModalProps={{ keepMounted: true }}
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: drawerWidth,
-          boxSizing: "border-box",
-          backgroundColor: "#dee9f5ff",
-          color: "black",
-        },
-      }}
-    >
-      {drawerContent}
-    </Drawer>
+    <>
+      {/* Drawer permanente para pantallas grandes */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: "none", md: "block" },
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+            background: "linear-gradient(180deg, #dee9f5 0%, #c2d4ea 100%)",
+            color: "#222",
+            borderRight: "none",
+            boxShadow: "4px 0 10px rgba(0,0,0,0.1)",
+          },
+        }}
+        open
+      >
+        {drawerContent}
+      </Drawer>
+
+      {/* Drawer temporal para pantallas pequeñas */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: "block", md: "none" },
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+            background: "linear-gradient(180deg, #dee9f5 0%, #c2d4ea 100%)",
+            color: "#222",
+            borderRight: "none",
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
+    </>
   );
 }
