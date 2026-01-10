@@ -59,6 +59,11 @@ export default function Chat() {
             tipo: "producto",
           },
         ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", mensaje: respuesta.mensaje },
+        ]);
       }
     } catch (error) {
       console.error("Error al enviar el mensaje:", error);

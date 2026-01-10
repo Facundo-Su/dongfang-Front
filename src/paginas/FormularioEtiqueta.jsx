@@ -10,16 +10,24 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import Sidebar from "../componentes/navbar/Sidebar";
+import MainLayout from "../componentes/layouts/MainLayout";
 import { enviarConsulta } from "../componentes/funciones/LimitarConsulta";
+import { DatosCliente } from "../componentes/producto/DatosCliente";
+import { EspacioRespuesta } from "../componentes/producto/EspacioRespuesta";
+import { EnviarPedido } from "../componentes/producto/EnviarPedido";
 
 export default function FormularioEtiqueta() {
   const [ancho, setAncho] = useState("");
   const [largo, setLargo] = useState("");
   const [cantidad, setCantidad] = useState("");
   const [tipo, setTipo] = useState("");
+
   const [respuesta, setRespuesta] = useState(null);
   const [error, setError] = useState(null);
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  // ---------------- CONSULTA DE PRECIO ----------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setRespuesta(null);
@@ -27,16 +35,28 @@ export default function FormularioEtiqueta() {
 
     if (!enviarConsulta()) return;
 
+    if (Number(cantidad) < 100) {
+      setError("La cantidad mínima es 100 / 最低数量100");
+      return;
+    }
+
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/precio/Etiqueta`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ancho, largo, cantidad, tipo }),
+          body: JSON.stringify({
+            ancho,
+            largo,
+            cantidad,
+            tipo,
+          }),
         }
       );
+
       if (!res.ok) throw new Error("Error en la consulta");
+
       const data = await res.json();
       setRespuesta(data);
     } catch (err) {
@@ -44,27 +64,36 @@ export default function FormularioEtiqueta() {
     }
   };
 
-  return (
-    <Box
-      sx={{
-        height: "100vh",
-        width: "100vw",
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
-        bgcolor: "#f0f2f5",
-      }}
-    >
-      {/* Sidebar */}
-      <Box
-        sx={{
-          width: { xs: "100%", md: 260 },
-          display: { xs: "none", md: "block" },
-        }}
-      >
-        <Sidebar />
-      </Box>
+  // ---------------- ENVÍO DEL PEDIDO ----------------
+  const handleClienteSubmit = async (datosCliente) => {
+    try {
+      await EnviarPedido({
+        tipoProducto: "Etiqueta",
+        endpoint: "/api/precio/pedido",
+        producto: {
+          tipoProducto: "Etiqueta",
+          ancho: ancho,
+          largo: largo,
+          cantidad: cantidad,
+          tipo: tipo,
+        },
+        cliente: {
+          nombreLocal: datosCliente.nombreLocal,
+          direccion: datosCliente.direccion,
+          localidad: datosCliente.localidad,
+          contacto: datosCliente.contacto,
+          comprobante: datosCliente.comprobante,
+        },
+      });
 
-      {/* Contenedor del formulario */}
+      alert("✅ Pedido enviado con éxito");
+    } catch (err) {
+      alert("❌ " + err.message);
+    }
+  };
+
+  return (
+    <MainLayout>
       <Box
         sx={{
           flexGrow: 1,
@@ -77,7 +106,7 @@ export default function FormularioEtiqueta() {
         <Paper
           sx={{
             width: "100%",
-            maxWidth: "800px", // ahora más ancho
+            maxWidth: 800,
             p: 6,
             display: "flex",
             flexDirection: "column",
@@ -86,12 +115,7 @@ export default function FormularioEtiqueta() {
             boxShadow: "0px 8px 20px rgba(0,0,0,0.1)",
           }}
         >
-          <Typography
-            variant="h4"
-            mb={3}
-          >
-            填写询问贴纸价格
-          </Typography>
+          <Typography variant="h4">填写询问贴纸价格</Typography>
 
           <Box
             component="form"
@@ -104,23 +128,24 @@ export default function FormularioEtiqueta() {
               value={ancho}
               onChange={(e) => setAncho(e.target.value)}
               required
-              fullWidth
             />
+
             <TextField
               label="Largo (cm)"
               type="number"
               value={largo}
               onChange={(e) => setLargo(e.target.value)}
               required
-              fullWidth
             />
+
             <TextField
               label="Cantidad"
               type="number"
               value={cantidad}
               onChange={(e) => setCantidad(e.target.value)}
               required
-              fullWidth
+              error={Number(cantidad) < 100 && cantidad !== ""}
+              helperText="La cantidad mínima es 100 / 最低数量100"
             />
 
             <FormControl
@@ -151,35 +176,20 @@ export default function FormularioEtiqueta() {
             </Button>
           </Box>
 
-          {respuesta && (
-            <Box
-              mt={3}
-              p={3}
-              bgcolor="#e0f7fa"
-              borderRadius={2}
-            >
-              <Typography variant="subtitle1">Respuesta:</Typography>
-              <pre>{JSON.stringify(respuesta, null, 2)}</pre>
-            </Box>
-          )}
+          <EspacioRespuesta
+            respuesta={respuesta}
+            error={error}
+            onPedido={() => setOpenDialog(true)}
+          />
 
-          {error && (
-            <Box
-              mt={3}
-              p={3}
-              bgcolor="#ffebee"
-              borderRadius={2}
-            >
-              <Typography
-                variant="subtitle1"
-                color="error"
-              >
-                Error: {error}
-              </Typography>
-            </Box>
-          )}
+          {/* ---------- DIALOGO DE DATOS CLIENTE ---------- */}
+          <DatosCliente
+            open={openDialog}
+            onClose={() => setOpenDialog(false)}
+            onSubmit={handleClienteSubmit}
+          />
         </Paper>
       </Box>
-    </Box>
+    </MainLayout>
   );
 }

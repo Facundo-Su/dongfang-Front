@@ -1,80 +1,11 @@
-import React, { useState } from "react";
-import { Box, IconButton, useTheme, useMediaQuery } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import Sidebar from "../componentes/navbar/Sidebar";
+import React from "react";
+import MainLayout from "../componentes/layouts/MainLayout";
 import Chat from "../componentes/chatAI/Chat";
 
 export default function Inicio() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md")); // detecta mobile
-
-  const handleDrawerToggle = () => {
-    setMobileOpen((prev) => !prev);
-  };
-
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "100vh",
-        bgcolor: "#f0f2f5",
-        flexDirection: { xs: "column", md: "row" },
-      }}
-    >
-      {/* Sidebar */}
-      <Sidebar
-        mobileOpen={mobileOpen}
-        handleDrawerToggle={handleDrawerToggle}
-        isMobile={isMobile} // importante para que Drawer sepa si es temporal o permanente
-      />
-
-      {/* Barra superior solo en mobile */}
-      {isMobile && (
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            p: 1,
-            justifyContent: "flex-start",
-          }}
-        >
-          <IconButton
-            onClick={handleDrawerToggle}
-            sx={{ color: "#222", "&:hover": { bgcolor: "transparent" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Box>
-      )}
-
-      {/* Contenedor del chat */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "stretch",
-          p: { xs: 1, md: 3 },
-        }}
-      >
-        <Box
-          sx={{
-            flexGrow: 1,
-            display: "flex",
-            flexDirection: "column",
-            borderRadius: 3,
-            border: "1px solid #ccc",
-            overflow: "hidden",
-            minWidth: 300,
-            maxWidth: "1200px",
-            bgcolor: "white",
-          }}
-        >
-          <Chat />
-        </Box>
-      </Box>
-    </Box>
+    <MainLayout>
+      <Chat />
+    </MainLayout>
   );
 }

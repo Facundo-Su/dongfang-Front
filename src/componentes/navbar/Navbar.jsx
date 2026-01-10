@@ -1,37 +1,88 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import {
+  Drawer,
+  Box,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import ChatIcon from "@mui/icons-material/Chat";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { useNavigate } from "react-router-dom";
 
-export default function Navbar({ title, links }) {
-  return (
-    <AppBar
-      position="static"
-      sx={{ display: "flex", flexDirection: "column" }}
-    >
-      <Toolbar>
-        {/* Título */}
+export default function Sidebar({
+  mobileOpen,
+  handleDrawerToggle,
+  isMobile,
+  minimized,
+}) {
+  const navigate = useNavigate();
+  const drawerWidth = minimized ? 60 : 240;
 
-        <img src="//Front end/src/assets/dongfangLogo.png"></img>
+  const items = [
+    { text: "Inicio", icon: <HomeIcon />, path: "/" },
+    { text: "Chat", icon: <ChatIcon />, path: "/chat" },
+    { text: "Configuración", icon: <SettingsIcon />, path: "/config" },
+  ];
 
-        <Typography
-          variant="h6"
-          sx={{ flexGrow: 1 }}
+  const drawerContent = (
+    <List>
+      {items.map((item) => (
+        <ListItem
+          button
+          key={item.text}
+          onClick={() => navigate(item.path)}
+          sx={{
+            justifyContent: minimized ? "center" : "flex-start",
+            px: minimized ? 1 : 2,
+          }}
         >
-          {title}
-        </Typography>
+          <ListItemIcon
+            sx={{
+              minWidth: 0,
+              mr: minimized ? 0 : 2,
+              justifyContent: "center",
+            }}
+          >
+            {item.icon}
+          </ListItemIcon>
+          {!minimized && <ListItemText primary={item.text} />}
+        </ListItem>
+      ))}
+    </List>
+  );
 
-        {/* Links */}
-        <Box>
-          {links.map((link, i) => (
-            <Button
-              key={i}
-              color="inherit"
-              onClick={link.onClick}
-            >
-              {link.label}
-            </Button>
-          ))}
-        </Box>
-      </Toolbar>
-    </AppBar>
+  if (isMobile) {
+    return (
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: 240,
+          },
+        }}
+      >
+        {drawerContent}
+      </Drawer>
+    );
+  }
+
+  return (
+    <Box
+      sx={{
+        width: drawerWidth,
+        transition: "width 0.3s ease",
+        borderRight: "1px solid #ddd",
+        bgcolor: "#fff",
+        overflow: "hidden",
+      }}
+    >
+      {drawerContent}
+    </Box>
   );
 }

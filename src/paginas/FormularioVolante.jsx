@@ -10,8 +10,10 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import Sidebar from "../componentes/navbar/Sidebar";
-import { enviarConsulta } from "../componentes/funciones/LimitarConsulta";
+import MainLayout from "../componentes/layouts/MainLayout";
+import { DatosCliente } from "../componentes/producto/DatosCliente";
+import { EnviarPedido } from "../componentes/producto/EnviarPedido";
+import { EspacioRespuesta } from "../componentes/producto/EspacioRespuesta";
 
 export default function FormularioVolante() {
   const [cantidad, setCantidad] = useState("");
@@ -20,13 +22,18 @@ export default function FormularioVolante() {
   const [tipo, setTipo] = useState("");
   const [respuesta, setRespuesta] = useState(null);
   const [error, setError] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setRespuesta(null);
     setError(null);
 
-    if (!enviarConsulta()) return;
+    if (Number(cantidad) < 1000) {
+      setError("La cantidad mínima es 1000 / 最低数量1000");
+      return;
+    }
+
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/precio/Volante`,
@@ -44,54 +51,66 @@ export default function FormularioVolante() {
     }
   };
 
-  return (
-    <Box
-      sx={{
-        height: "100vh",
-        width: "100vw",
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
-        bgcolor: "#f0f2f5",
-      }}
-    >
-      {/* Sidebar */}
-      <Box
-        sx={{
-          width: { xs: "100%", md: 260 },
-          display: { xs: "none", md: "block" },
-        }}
-      >
-        <Sidebar />
-      </Box>
+  // ---------------- ENVÍO DEL PEDIDO ----------------
+  const handleClienteSubmit = async (datosCliente) => {
+    try {
+      await EnviarPedido({
+        tipoProducto: "Volante",
+        endpoint: "/api/precio/pedido",
+        producto: {
+          tipoProducto: "Volante",
+          cantidad,
+          tamanio,
+          color,
+          tipo,
+        },
+        cliente: {
+          nombreLocal: datosCliente.nombreLocal,
+          direccion: datosCliente.direccion,
+          localidad: datosCliente.localidad,
+          contacto: datosCliente.contacto,
+          comprobante: datosCliente.comprobante,
+        },
+      });
 
-      {/* Contenedor del formulario */}
+      alert("✅ Pedido enviado con éxito");
+      setOpenDialog(false);
+    } catch (err) {
+      alert("❌ " + err.message);
+    }
+  };
+
+  return (
+    <MainLayout>
       <Box
         sx={{
           flexGrow: 1,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          bgcolor: "#e8ebf0",
-          p: 4,
+          p: { xs: 2, md: 4 },
+          minWidth: 0, // permite que se achique junto al sidebar
         }}
       >
         <Paper
           sx={{
             width: "100%",
-            maxWidth: "800px", // más ancho
-            p: 6,
+            maxWidth: "800px",
+            p: { xs: 3, md: 6 },
             display: "flex",
             flexDirection: "column",
             gap: 3,
             borderRadius: 3,
             boxShadow: "0px 8px 20px rgba(0,0,0,0.1)",
+            bgcolor: "white",
+            mx: 2, // margen lateral para que no toque los bordes en mobile
           }}
         >
           <Typography
             variant="h4"
             mb={3}
           >
-            填写询问传单价格
+            Consulta de Volante
           </Typography>
 
           <Box
@@ -106,6 +125,8 @@ export default function FormularioVolante() {
               onChange={(e) => setCantidad(e.target.value)}
               required
               fullWidth
+              error={Number(cantidad) < 1000 && cantidad !== ""}
+              helperText="La cantidad mínima es 1000 / 最低数量1000"
             />
 
             <FormControl
@@ -157,44 +178,31 @@ export default function FormularioVolante() {
               </Select>
             </FormControl>
 
-            <Button
-              type="submit"
-              variant="contained"
-              size="large"
-            >
-              Consultar
-            </Button>
-          </Box>
-
-          {respuesta && (
             <Box
-              mt={3}
-              p={3}
-              bgcolor="#e0f7fa"
-              borderRadius={2}
+              display="flex"
+              gap={2}
             >
-              <Typography variant="subtitle1">Respuesta:</Typography>
-              <pre>{JSON.stringify(respuesta, null, 2)}</pre>
-            </Box>
-          )}
-
-          {error && (
-            <Box
-              mt={3}
-              p={3}
-              bgcolor="#ffebee"
-              borderRadius={2}
-            >
-              <Typography
-                variant="subtitle1"
-                color="error"
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
               >
-                Error: {error}
-              </Typography>
+                Consultar
+              </Button>
             </Box>
-          )}
+          </Box>
+          <EspacioRespuesta
+            respuesta={respuesta}
+            error={error}
+            onPedido={() => setOpenDialog(true)}
+          />
+          <DatosCliente
+            open={openDialog}
+            onClose={() => setOpenDialog(false)}
+            onSubmit={handleClienteSubmit}
+          />
         </Paper>
       </Box>
-    </Box>
+    </MainLayout>
   );
 }
